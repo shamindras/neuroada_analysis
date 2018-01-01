@@ -12,6 +12,18 @@ You should create a Zotero account first to access the papers and joining the zo
 
 We will add PDFs of the reviewed papers in this folder as we complete the review for them.
 
+## Installation Tips
+
+To run the [`tufte-handout R templates`](http://rmarkdown.rstudio.com/tufte_handout_format.html) that are used you will need to install:
+   - [pandoc](https://pandoc.org/) e.g. on `mac` this is `brew install pandoc`
+   - `pandoc-citeproc` e.g. on `mac` this is `brew install pandoc pandoc-citeproc`
+
+You should also install the following `R` packages before running anything:
+
+- `rmarkdown`
+- `tufte`
+- `knitr`
+
 ## Git-Github - Typical Workflow
 
 1. **First time only** Clone this repo through github i.e. `git clone git@github.com:shamindras/cmu_robustness_rg.git`

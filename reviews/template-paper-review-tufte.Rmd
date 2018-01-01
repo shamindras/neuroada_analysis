@@ -1,0 +1,57 @@
+---
+title: "Literature Review Template (Tufte Handout)"
+subtitle: "An implementation in R Markdown"
+author: "Pratik Patil, Shamindra Shrotriya"
+date: "`r Sys.Date()`"
+output:
+  tufte::tufte_handout:
+    latex_engine: xelatex
+  tufte::tufte_book:
+    latex_engine: xelatex
+bibliography: cmu_robustness.bib
+link-citations: yes
+---
+
+```{r setup, include=FALSE}
+library(tufte)
+# invalidate cache when the tufte version changes
+knitr::opts_chunk$set(tidy = FALSE, cache.extra = packageVersion('tufte'))
+options(htmltools.dir.version = FALSE)
+```
+
+# Introduction
+
+* Key goal(s) of the paper
+
+# Main results
+
+* Should note the specific results and their novelty
+
+# Key assumptions made
+
+* Are any of these assumptions checkable from the data?
+* Which of these assumptions could be relaxed?
+  
+# Primary proof techniques/ math used
+
+* Summarize and sketch only
+* Anything new/ novel that hasn't been used before
+  
+# Supporting/ background papers referenced
+
+* Sort by descending relevance, chronologically e.g. [@chen_general_2015] and [@charikar_learning_2016]
+* Why was this paper referenced, should we dig further into it? Why?
+  
+# Key improvements, next steps, open problems 
+
+* Split by those that the authors have identified
+* New open problems that we think of
+  
+# Simulation of Results, Comment on reproducibility here
+
+* Did the authors run any simulations to test the validity of the results?
+* If so, are they reproducible? Any packages and supporting code? List it here?
+* Are there any simulations we can run in `R` or `Python` here
+to test the validity of these results?
+
+# References
