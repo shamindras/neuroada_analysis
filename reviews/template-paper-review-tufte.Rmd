@@ -8,7 +8,7 @@ output:
     latex_engine: xelatex
   tufte::tufte_book:
     latex_engine: xelatex
-bibliography: cmu_robustness.bib
+bibliography: cmu_neuroada.bib
 link-citations: yes
 ---
 
@@ -39,7 +39,7 @@ options(htmltools.dir.version = FALSE)
   
 # Supporting/ background papers referenced
 
-* Sort by descending relevance, chronologically e.g. [@chen_general_2015] and [@charikar_learning_2016]
+* Sort by descending relevance, chronologically e.g. [@cribben_estimating_2015] , [@miwakeichi_decomposing_2004] and [@qiao_functional_2017]
 * Why was this paper referenced, should we dig further into it? Why?
   
 # Key improvements, next steps, open problems 
