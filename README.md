@@ -1,12 +1,13 @@
 # CMU Stats Robustness Reading Group
 
-This repo stores the notes and literature review for various
-statistics, Computer Science and ML papers related to the
-topic of **robustness**.
+This repo stores the analysis, notes and literature review for various
+for Shamindra Shrotriya's Neuroscience Advanced Data Analysis (ADA) project at CMU (2018)
+with advisor Prof. Max G'Sell. We will refer to this repo going forward as `neuroada`.
 
 ## Papers (Zotero Group)
 
-The *up to date* reading list is stored in the [CMU Robustness zotero group page](https://www.zotero.org/groups/2051145/cmu_robustness/items). 
+The *up to date* reading list is stored in the [neuroada research papers](https://www.zotero.org/groups/2063189/cmu_neuroada/items). The majority of these papers were
+collated by Peter Elliot.
 
 You should create a Zotero account first to access the papers and joining the zotero group. Feel free to send Shamindra an email if there are any further issues accessing this.
 
@@ -23,6 +24,8 @@ You should also install the following `R` packages before running anything:
 - `rmarkdown`
 - `tufte`
 - `knitr`
+- `here`
+- `usethis`
 
 ## Git-Github - Typical Workflow
 
@@ -77,7 +80,5 @@ git rebase master # sync branch with upstream master
 
 The following members are contributing the repo
 
-* Prof. Larry Wasserman (LW)
-* Prof. Siva Balakrishnan (SB)
-* Pratik Patil (PP)
 * Shamindra Shrotriya (SS)
+* Max G'Sell (MG)
