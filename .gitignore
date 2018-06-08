@@ -308,3 +308,9 @@ TSWLatexianTemp*
 # standalone packages
 *.sta
 .Rproj.user
+
+# neurodata
+# recursively remove tar.gz files from immediate subfolders
+data/**/*.tar.gz
+
+.DS_Store
