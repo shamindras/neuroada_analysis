@@ -1,0 +1,153 @@
+% Created 2018-01-25 Thu 12:55
+% Intended LaTeX compiler: pdflatex
+\documentclass[11pt]{article}
+\usepackage[utf8]{inputenc}
+\usepackage{lmodern}
+\usepackage[T1]{fontenc}
+\usepackage{fixltx2e}
+\usepackage{graphicx}
+\usepackage{longtable}
+\usepackage{float}
+\usepackage{wrapfig}
+\usepackage{rotating}
+\usepackage[normalem]{ulem}
+\usepackage{amsmath}
+\usepackage{textcomp}
+\usepackage{marvosym}
+\usepackage{wasysym}
+\usepackage{amssymb}
+\usepackage{amsmath}
+\usepackage[version=3]{mhchem}
+\usepackage[numbers,super,sort&compress]{natbib}
+\usepackage{natmove}
+\usepackage{url}
+\usepackage{minted}
+\usepackage{underscore}
+\usepackage[linktocpage,pdfstartview=FitH,colorlinks,
+linkcolor=blue,anchorcolor=blue,
+citecolor=blue,filecolor=blue,menucolor=blue,urlcolor=blue]{hyperref}
+\usepackage{attachfile}
+\author{Yuanning Li, Shamindra Shrotriya}
+\date{\today}
+\title{Data file details}
+\begin{document}
+
+\tableofcontents
+
+
+\section{Category}
+\label{sec:org93645e8}
+
+\begin{itemize}
+\item In the \textbf{category task}, images from different categories are shown to the subjects
+\item The neural activities from different electrodes are recorded and saved as csv files.
+\item Each file contains the \textbf{2-dimensional array} of all the data recorded from \textbf{one} single electrodes.
+\item In each session of the category dataset, there are 480 trials from 6 different conditions (some cases 7 conditions, see ‘Localizer\_category\_key.xlsx’ for details).
+\item Each condition is a type category of images, e.g. bodies, faces, words, houses, scrambles, etc.
+\end{itemize}
+
+\subsection{Category Data - Naming Conventions}
+\label{sec:orgd24bb0b}
+
+\begin{itemize}
+\item The \textbf{broadband data} files are named as:
+\begin{itemize}
+\item \texttt{\$\{SUBJECT\_ID\}\_Category\_Localizer\_Session\$\{SESSION\_INDEX\}\_Broadband\_Ch\$\{CHANNEL\_INDEX\}.dat}
+\end{itemize}
+
+\item The \textbf{ERP data} files are named as:
+\begin{itemize}
+\item \texttt{Session\$\{SESSION\_INDEX\}\_\$\{TASK\}\_data\_\$\{FILTER\}\_all\_channels\_ch\$\{CHANNEL\_INDEX\}.dat}
+\end{itemize}
+\end{itemize}
+
+
+\subsection{Category Data - Key Naming Field Definitions}
+\label{sec:org477ffbc}
+
+The key fields in the naming convention are defined as follows:
+\begin{itemize}
+\item \texttt{SESSION\_INDEX} is the \textbf{session number} (1 or 2 in most cases)
+\begin{itemize}
+\item This is sometimes omitted if there is only one session
+\end{itemize}
+\item \texttt{TASK} is the task name, i.e. \textbf{category}
+\item \texttt{FILTER} is the way the data is filtered, i.e. \textbf{bandpass} or \textbf{raw}
+\item \texttt{CHANNEL\_INDEX} is the \textbf{electrode index} \(1,2,3, \ldots\)
+\end{itemize}
+
+\subsection{Category Data - Contents}
+\label{sec:org4fa8e66}
+
+\begin{itemize}
+\item For the category task, each data file contains the \(N \times T\) data matrix from channel \(X\) (\(X = 1, 2, \ldots\))
+\item Each column is a feature (time point) and each row is a trial
+\item ERP:
+\begin{itemize}
+\item Typically \(N = 480\) trials and \(T = 1500\) time points
+\item The data is sampled at \textbf{1000hz}
+\end{itemize}
+\item Broadband:
+\begin{itemize}
+\item Typically \(N = 480\) trials and \(T = 150\) time points
+\item The data is sampled at \textbf{100hz}
+\end{itemize}
+\item All the trials are aligned to the onset time of the image stimulus
+\item The 1500 time points start from 500 ms before stimulus onset and ends at 999 ms after stimulus onset.
+\item The 150 time points start from 500 ms before stimulus onset and ends at 990 ms after stimulus onset.
+\end{itemize}
+
+The Category\_label.dat file contains the 480-by-1 label vector for each trial condition, the value of the i-th component in the vector represents the image stimulus type for the i-th trial, 1: bodies, 2: faces, 3: words(or shoes), 4: hammers, 5: houses, 6: non-objects. (see ‘Localizer\_category\_key.xlsx’ for details).
+
+In addition to the single trial data, the continuous timecourse data for the category task is also included. You’ll find the file Category\_fulltimecourse\_signal.dat for each session. This is the raw time sequence for the entire session. The file is a N by L matrix where N is the number of electrodes and L is the total time length of the entire session (typically around 1e6 time points sampled at 1000 Hz). In the file Category\_timestamps.dat, the timestamps for the stimulus onset time of each trial are saved in a N-by-1 vector, where N is the total number of trials. For example, if the i-th elements in the vector is x, then the stimulus onset of the i-th trial happens at the x-th timepoint in Category\_fulltimecourse\_signal.dat. The condition for each trial is the same as Category\_label.dat.
+
+\section{Individuation}
+\label{sec:orgb8c8cd0}
+
+\begin{itemize}
+\item In the experiment the patient was passively viewing a series of faces and the task was to respond whether the face being presented was a male or female face.  - There were:
+\begin{itemize}
+\item 14 different face identities in total,
+\item each face identity had 5 different emotions
+\item with 3 different gazes.
+\item Each individual picture was presented \textbf{4 times}
+\end{itemize}
+\item This yields 840 trials in total in one session i.e. \(840 = 14 \times 5 \times 3 \times 4\).
+\end{itemize}
+
+\subsection{Individuation - Naming Convention}
+\label{sec:orgaec1d3e}
+
+The files are named as:
+
+\texttt{Session\$\{SESSION\_INDEX\}\_\$\{TASK\}\_data\_\$\{FILTER\}\_all\_channels\_ch\$\{CHANNEL\_INDEX\}.dat}
+
+\subsection{Individuation Data - Key Naming Field Definitions}
+\label{sec:org04bda2f}
+
+\begin{itemize}
+\item \texttt{SESSION\_INDEX} is the session number (1 or 2 in most cases), sometimes this is omitted if there is only one session
+\item \texttt{TASK} is the task name, i.e. \textbf{individuation}
+\item \texttt{FILTER} is the way the data is filtered, i.e. \textbf{bandpass} or \textbf{raw}
+\item \texttt{CHANNEL\_INDEX} is the index of the electrode, \(1, 2, 3, \ldots\)
+\end{itemize}
+
+\subsection{Folder Structure}
+\label{sec:orgf55c1e9}
+
+\begin{itemize}
+\item The files of each session are sorted into the corresponding folder. 
+\item For each session, the labels for the trials are written into the following files:
+\item \texttt{\$\{SESSIONID\}\_\$\{CONDITION\}\_label.csv}
+\begin{itemize}
+\item \texttt{SESSIONID in \{Session1, Session2\}}
+\item \texttt{CONDITION in \{Face, Gender, Expression, Gaze\}}
+\begin{itemize}
+\item \texttt{Face} - the index of the face identity, value range 1 - 14
+\item \texttt{Gender} - the index of the face gender, 1 - male, 2 - female
+\item \texttt{Expression} - the index of the face expression, 1 - angry, 2 - afraid, 3 - happy, 4 - neutral, 5 - sad
+\item \texttt{Gaze} - the index of the eye gaze, 1 - front, 2 - left, 3 - right
+\end{itemize}
+\end{itemize}
+\end{itemize}
+\end{document}

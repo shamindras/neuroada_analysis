@@ -1,0 +1,69 @@
+#+TITLE:       Functional Connectivity and Undirected Graphs
+#+AUTHOR:      Shamindra Shrotriya
+#+DATE:        
+#+EMAIL:       shamindra.shrotriya@gmail.com
+#+DESCRIPTION: Daily TODO list for Shamindra
+#+KEYWORDS:    daily, todo, 36705
+#+SEQ_TODO: NEXT(n) TODO(t) WAITING(w) SOMEDAY(s) PROJ(p) | DONE(d) CANCELLED(c)
+#+LANGUAGE:    'en'
+#+TEXT:        Draft of the ADA presentation
+
+* Functional Connectivity and Time Weighted Undirected Graphs
+
+* We seek to identify dynamic functional connectivity in neuronal data
+** Anatomical Connectivity
+   1. Structural links such as synapses or fiber pathways
+   2. Difficult!
+** Functional Connectivity
+   1. How does information flow through the brain      
+   2. Causal - extract networks of causal influences of neural elements
+      - Bayesian directed graph modeling
+   3. Associative - patterns of statistical dependence
+      - cross correlations in an undirected setting
+
+* Central Question we are trying to answer?
+** Question:
+** Who could this help? How?
+
+* Data collection
+  1. Question: Put the picture of the brain
+  2. Key points here about placement of arrays and sensors
+  3. Subjects are epilepsy patients preparing for surgery
+  4. Recordings are used clinically to choose areas for resection
+  5. Electrode locations mostly driven by clinical rather than research goals
+
+* Recordings uses Electrocorticography (ECoG)
+** Benefits
+   2. ECoG is less common than EEG, fMRI or MEG
+   3. Felxibility in placement - good spatial resolution
+   4. Good signal to noise properties 
+   5. Virtually no missingness in the signal!
+** Limitations
+   1. Not whole brain signal e.g. fMRI
+
+Question: How is EcoG different from EEG?
+
+* Our data consists of visual experiments on epilepsy patients
+   1. Data collected for 20 epilepsy patients
+   2. Task: Subjects are shown a series of images
+   3. Faces, Bodies, Words, Hammers, Houses, Non-Objects
+      1. 480 trials
+      2. record 500ms pre-stimulus, 1s post-stimulus
+   4. Images were chosen to represent certain concepts
+      1. Faces are biological, Hammers aren’t
+   5. Want to understand difference in neural response based on stimulus
+
+* Key attributes of the signal
+  1. Question: What causes the signal flip? Ask MG
+  2. High trial-to-trial variability
+  3. 
+
+* What have we done with the data?
+** A series of transformations
+   1. Covariance across channel
+
+* Modeling with Undirected Graphs
+
+* Key modeling enhancements we would want to employ
+
+* Limitations of such a Model
