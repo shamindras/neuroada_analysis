@@ -312,5 +312,7 @@ TSWLatexianTemp*
 # neurodata
 # recursively remove tar.gz files from immediate subfolders
 data/**/*.tar.gz
+data/**/*.dat
+data/localizer_erp/P*_fullset/
 
 .DS_Store
