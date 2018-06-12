@@ -317,3 +317,4 @@ data/**/*.dat
 data/localizer_erp/P*_fullset/
 
 .DS_Store
+.Rproj.user
