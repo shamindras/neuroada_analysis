@@ -66,6 +66,17 @@ test_trials
 # Create the spectrogram for each trial
 p <- test_trials %>%
         purrr::map(.x = ., ~ neuroada::erp_create_specgram_trial(inp_trial = .x))
-
+dim(p[[1]]$S)
+p[[1]]$S
+x <- abs(p[[1]]$S)
+dim(x)
+plot(rowMeans(log(x^2)), type = 'l')
+lines(idx, fit$fitted.values, col='red')
+y = rowMeans(log(x^2))
+idx = 1:64
+fit = lm(y ~ I(1/idx))
+curve(1/(1:64))
 p2 <- p %>% purrr::map(.x = ., ~ neuroada::erp_plot_specgram_trial(inp_sgram = .x))
 dev.off()
+
+neuroada::erp_create_specgram_trial
