@@ -315,5 +315,10 @@ TSWLatexianTemp*
 data/**/*.tar.gz
 data/**/*.dat
 data/localizer_erp/P*_fullset/
+data/localizer_erp/P35_specgram/*.csv
 
 .DS_Store
+.Rproj.user
+
+# Python
+Python/.ipynb_checkpoints/
