@@ -1,8 +1,11 @@
 # Clean up
 # TODO: Delete the rm line
-rm(list = ls())
+# rm(list = ls())
 cat("\014")
 dev.off()
+
+# Set seed for reproducibility
+set.seed(1265)
 
 library(here)
 library(tidyverse)
@@ -10,6 +13,11 @@ library(magrittr)
 # library(signal)
 library(pryr)
 devtools::install_github("shamindras/neuroada")
+
+# Load the differential networks paper code
+dyn.load(here::here("R", "dpm.so"))
+source(here::here("R", "dpm.R"))
+library(MASS)
 
 #-------------------------------------------------------------------------------
 # Define Custom Functions
@@ -163,7 +171,6 @@ erp_create_rbind <- function(inp_erp_channel_df, n = 500){
     base::return(new_list)
 }
 
-
 aux_convert_df_matrix <- function(inp_df){
     out_mat <- inp_df %>%
                     base::as.matrix()
@@ -171,6 +178,8 @@ aux_convert_df_matrix <- function(inp_df){
     base::return(out_mat)
 }
 
+base::load(file="~/Desktop/erp_filt_df_cat_ms.RData")
+base::load(file="~/Desktop/erp_filt_df_all_ms.RData")
 
 test1 <- erp_create_rbind(inp_erp_channel_df = erp_filt_df_cat_ms, n = 500)
 test2 <- test1 %>%
@@ -179,28 +188,16 @@ test2 <- test1 %>%
 length(test2)
 test3 <- test2[1:2]
 length(test3)
+dim(test3[[2]])
+dim(test3[[1]])
 
-class(check_df)
-check_df2 <- check_df %>%
-                base::as.matrix()
+# Pre-stim matrix is too large, let's sample some rows WITHOUT replacement
+prestim_mat <- test3[[1]]
+prestim_samp_trials <- 10
+samp_row_idx <- sample(nrow(prestim_mat),
+                       size = prestim_samp_trials, replace = FALSE)
+prestim_mat_samp <- prestim_mat[samp_row_idx, ]
 
-dimnames(check_df2) <- NULL
-dimnames(check_df2)
+# fit.aic <- dpm(test3[[2]][1:10, ], prestim_mat_samp[, ], nlambda=2, tuning="aic")
+fit.cv <- dpm(test3[[2]][1:10, ], prestim_mat_samp[, ], nlambda=2, tuning="cv", folds = 3)
 
-class(check_df2)
-
-length(test1)
-purrr::map(.x = test1, ~ dim(.x))
-purrr::map(.x = test2, ~ dim(.x))
-purrr::map(.x = test2, ~ class(.x))
-dim(test1)
-as.matrix(test1)
-dim(test1)
-typeof(test1)
-dim(erp_filt_df_cat_ms[[1]])
-a <- list(rep(1, 10), rep(2, 20), rep(3, 15), rep(4, 3), rep(5, 16))
-a
-b <- a[1:3]
-b[4:5] <- a[4:5]
-b
-a

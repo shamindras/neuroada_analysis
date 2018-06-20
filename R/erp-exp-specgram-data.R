@@ -60,6 +60,6 @@ get_erp_trials_cat <- erp_cat_session1[[1]] %>%
 
 
 # Export the file to CSV
-out_csv_path <- file.path(out_dir_path, "P35-channel-01-faces-trials.csv")
+out_csv_path <- file.path(out_dir_path, "P35-chn-01-ses-01-faces-trials.csv")
 readr::write_csv(x = get_erp_trials_cat,
                  path = out_csv_path)
