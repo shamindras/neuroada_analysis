@@ -178,13 +178,17 @@ aux_convert_df_matrix <- function(inp_df){
     base::return(out_mat)
 }
 
+# Load in the data manually i.e. if comp crashes, so we don't need
+# to recreate it again. Takes 1hr!
 base::load(file="~/Desktop/erp_filt_df_cat_ms.RData")
 base::load(file="~/Desktop/erp_filt_df_all_ms.RData")
 
+#
 test1 <- erp_create_rbind(inp_erp_channel_df = erp_filt_df_cat_ms, n = 500)
 test2 <- test1 %>%
             purrr::map(.x = ., ~ aux_convert_df_matrix(inp_df = .x))
 
+dim(test1[[1]])
 length(test2)
 test3 <- test2[1:2]
 length(test3)
