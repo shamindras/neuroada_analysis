@@ -150,16 +150,17 @@ dim(erp_filt_df_all_ms[[1]])
 # For pre-stim matrices - just do a rowbind to get 500*numtrials - the X matrix
 #-------------------------------------------------------------------------------
 
+# Load in the data manually i.e. if comp crashes, so we don't need
+# to recreate it again. Takes 1hr!
+base::load(file="~/Desktop/erp_filt_df_cat_ms.RData")
+base::load(file="~/Desktop/erp_filt_df_all_ms.RData")
+
 erp_create_rbind <- function(inp_erp_channel_df, n = 500){
 
     rem_length <- length(inp_erp_channel_df) - n
     first_idx <- base::seq.int(from = 1, by = 1, length.out = n)
     last_idx <- base::seq.int(from = n + 1, by = 1, length.out = rem_length)
     rem_idx <- base::seq.int(from = 2, by = 1, length.out = rem_length)
-    # print(rem_length)
-    # print(first_idx)
-    # print(last_idx)
-    # print(rem_idx)
 
     erp_channel_firstn <- inp_erp_channel_df[first_idx] %>%
                             purrr::map_df(.x = ., .f = rbind)
@@ -178,30 +179,129 @@ aux_convert_df_matrix <- function(inp_df){
     base::return(out_mat)
 }
 
-# Load in the data manually i.e. if comp crashes, so we don't need
-# to recreate it again. Takes 1hr!
-base::load(file="~/Desktop/erp_filt_df_cat_ms.RData")
-base::load(file="~/Desktop/erp_filt_df_all_ms.RData")
+aux_select_colnums <- function(inp_mat, col_idx){
+    out_mat <- inp_mat[, col_idx]
+    base::return(out_mat)
+}
 
-#
-test1 <- erp_create_rbind(inp_erp_channel_df = erp_filt_df_cat_ms, n = 500)
-test2 <- test1 %>%
-            purrr::map(.x = ., ~ aux_convert_df_matrix(inp_df = .x))
+aux_fit_dpm <- function(x_mat, y_mat, nlambda = 2, tuning="aic", folds = 3,
+                        y_idx) {
+    start_msg <-  stringr::str_c("Fitting poststim matrix", y_idx,
+                                 "...", sep = " ")
+    if (tuning == "aic") {
+        print(start_msg)
+        fit <- dpm(y_mat, x_mat, nlambda = nlambda, tuning = tuning)
+    } else {
+        print(start_msg)
+        fit <- dpm(y_mat, x_mat, nlambda = nlambda, tuning = tuning, folds = folds)
+    }
+    base::return(fit)
+}
 
-dim(test1[[1]])
-length(test2)
-test3 <- test2[1:2]
-length(test3)
-dim(test3[[2]])
-dim(test3[[1]])
+run_fit_dpm <- function(pre_stim_mat, post_stim_mats, post_stim_idx,
+                        nlambda = 2, tuning="aic", folds = 3){
+    num_poststim <- base::length(post_stim_mats)
+    seq_num_poststim <- base::seq.int(from = 1, to = num_poststim, by = 1)
+    all_fits <- post_stim_mats %>%
+        purrr::map2(.x = ., .y = seq_num_poststim,
+                    ~ aux_fit_dpm(x_mat = pre_stim_mat,
+                                y_mat = .x,
+                                nlambda = nlambda,
+                                tuning = tuning,
+                                folds = folds,
+                                y_idx = .y))
+    # end_msg <- stringr::str_c("Fitted poststim matrix", post_stim_idx, "...", sep = " ")
+    # print(end_msg)
+    base::return(all_fits)
+}
 
-# Pre-stim matrix is too large, let's sample some rows WITHOUT replacement
-prestim_mat <- test3[[1]]
-prestim_samp_trials <- 10
-samp_row_idx <- sample(nrow(prestim_mat),
-                       size = prestim_samp_trials, replace = FALSE)
-prestim_mat_samp <- prestim_mat[samp_row_idx, ]
+ext_list_element <- function(l, elem_idx = 5){
+    base::return(l$dpm[[5]])
+}
 
-# fit.aic <- dpm(test3[[2]][1:10, ], prestim_mat_samp[, ], nlambda=2, tuning="aic")
-fit.cv <- dpm(test3[[2]][1:10, ], prestim_mat_samp[, ], nlambda=2, tuning="cv", folds = 3)
+create_tidy_cormat <- function(cormat){
+    cor_tidy <- as.data.frame(cormat) %>%
+        dplyr::mutate(channel_y = factor(row.names(.)
+                                         , levels=row.names(.))) %>%
+        tidyr::gather(key = channel_x
+                      , value = value, -channel_y
+                      , na.rm = TRUE, factor_key = TRUE)
+    base::return(cor_tidy)
+}
 
+
+create_corr_ts <- function(inp_cormat, cat_idx, time_ms_idx
+                           , plot_col_range = c(-0.0001, 0.0001)){
+    print(stringr::str_c("Creating plot for ms:", time_ms_idx, "...",
+                         sep = " "))
+    plot_title <- stringr::str_c("Difference to base precision matrices ms:",
+                                 time_ms_idx, sep = " ")
+    p1 <- ggplot2::ggplot(data = cormat_tidy
+                          , aes(channel_x, channel_y, fill = value)) +
+        ggplot2::geom_tile(color = "white") +
+        ggplot2::scale_fill_gradient2(low = "blue", high = "red"
+                                      , mid = "white",
+                                      midpoint = 0, limit = plot_col_range
+                                      , space = "Lab",
+                                      name = "Legend") +
+        ggplot2::theme_minimal() +
+        ggplot2::theme(axis.text.x = element_text(angle = 90
+                                                  , vjust = 1,
+                                                  size = 6
+                                                  , hjust = 1)
+                       , axis.text.y = element_text(size = 6)) +
+        ggplot2::labs(title = plot_title
+                      , subtitle = "Across Neural Channels"
+                      , x = "Neural Channel"
+                      , y = "Neural Channel") +
+        ggplot2::coord_fixed()
+
+    base::return(p1)
+}
+
+# Faces
+base_dndf <- erp_create_rbind(inp_erp_channel_df = erp_filt_df_cat_ms, n = 500)
+base_dnmat <- base_dndf %>%
+                purrr::map(.x = ., ~ aux_convert_df_matrix(inp_df = .x))
+# Filter out the first 25 cols for each matrix
+base_dnmat_cols <- base_dnmat %>%
+                    purrr::map(.x = ., ~ aux_select_colnums(inp_mat = .x,
+                                                            col_idx = 1:25))
+
+pre_stim_mat <- base_dnmat_cols[[1]]
+post_stim_mats <- base_dnmat_cols[2:1001]
+post_stim_idx <- base::seq.int(from = 1, to = base::length(post_stim_mats),
+                               by = 1)
+all_fits <- run_fit_dpm(pre_stim_mat = pre_stim_mat,
+                        post_stim_mats = post_stim_mats,
+                        post_stim_idx = post_stim_idx,
+                        nlambda = 10, tuning="aic", folds = 3)
+
+all_fits_ext <- all_fits %>%
+                    purrr::map(.x = ., ~ ext_list_element(l = .x, elem_idx = 5))
+
+all_fits_ext_plots <- all_fits_ext %>%
+                        purrr::map2(.x = ., .y = base::seq.int(from = 1,
+                                                               to = base::length(.),
+                                                               by = 1),
+                                    ~ create_corr_ts(inp_cormat = cormat_tidy,
+                                                   cat_idx = CORE_CAT,
+                                                   time_ms_idx = 500 + .y,
+               plot_col_range = c(-0.00009, 0.00009)))
+
+max(all_fits_ext_plots[[180]])
+max(all_fits_ext[[180]])
+min(all_fits_ext[[180]])
+
+max(all_fits_ext[[1]])
+min(all_fits_ext[[1]])
+
+all_fits_ext[[1]]
+
+# empirical precision matrices and differences. Make sure that they agree
+# when lambda approx 0 (exactly zero may break solver), try other lambdas. Look at how they generate their
+# sequence of lambdas
+# Try downsampling as well
+
+all_fits_ext[[185]] - all_fits_ext[[1]]
+# all_fits_ext[[185]] - all_fits_ext[[185]]
