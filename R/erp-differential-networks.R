@@ -236,7 +236,7 @@ create_corr_ts <- function(inp_cormat, cat_idx, time_ms_idx
                          sep = " "))
     plot_title <- stringr::str_c("Difference to base precision matrices ms:",
                                  time_ms_idx, sep = " ")
-    p1 <- ggplot2::ggplot(data = cormat_tidy
+    p1 <- ggplot2::ggplot(data = inp_cormat
                           , aes(channel_x, channel_y, fill = value)) +
         ggplot2::geom_tile(color = "white") +
         ggplot2::scale_fill_gradient2(low = "blue", high = "red"
@@ -280,18 +280,37 @@ all_fits <- run_fit_dpm(pre_stim_mat = pre_stim_mat,
 all_fits_ext <- all_fits %>%
                     purrr::map(.x = ., ~ ext_list_element(l = .x, elem_idx = 5))
 
-all_fits_ext_plots <- all_fits_ext %>%
+tidy_cormats <- all_fits_ext %>%
+                    purrr::map(.x = , ~create_tidy_cormat(cormat = .x))
+
+all_fits_ext_plots <- tidy_cormats %>%
                         purrr::map2(.x = ., .y = base::seq.int(from = 1,
                                                                to = base::length(.),
                                                                by = 1),
-                                    ~ create_corr_ts(inp_cormat = cormat_tidy,
+                                    ~ create_corr_ts(inp_cormat = .x,
                                                    cat_idx = CORE_CAT,
                                                    time_ms_idx = 500 + .y,
-               plot_col_range = c(-0.00009, 0.00009)))
+               plot_col_range = c(-0.0009, 0.0009)))
 
-max(all_fits_ext_plots[[180]])
+dev.off()
+all_fits_ext_plots[[170]]
+all_fits_ext_plots[[171]]
+all_fits_ext_plots[[172]]
+all_fits_ext_plots[[173]]
+all_fits_ext_plots[[174]]
+all_fits_ext_plots[[175]]
+all_fits_ext_plots[[176]]
+all_fits_ext_plots[[177]]
+all_fits_ext_plots[[178]]
+all_fits_ext_plots[[180]]
+all_fits_ext_plots[[181]]
+
 max(all_fits_ext[[180]])
 min(all_fits_ext[[180]])
+
+max(all_fits_ext[[1]])
+min(all_fits_ext[[1]])
+
 
 max(all_fits_ext[[1]])
 min(all_fits_ext[[1]])
@@ -305,3 +324,50 @@ all_fits_ext[[1]]
 
 all_fits_ext[[185]] - all_fits_ext[[1]]
 # all_fits_ext[[185]] - all_fits_ext[[185]]
+
+#-------------------------------------------------------------------------------
+# For pre-stim matrices - downsample the 500 pre-stim matrices data to 83 trials
+#-------------------------------------------------------------------------------
+
+# Start with the same pre-stim matrices as before
+pre_stim_mat <- base_dnmat_cols[[1]]
+post_stim_mats <- base_dnmat_cols[2:1001]
+post_stim_idx <- base::seq.int(from = 1, to = base::length(post_stim_mats),
+                               by = 1)
+
+# Let's downsample the pre-stim matrix to match
+pre_stim_mat_ds <-
+all_fits <- run_fit_dpm(pre_stim_mat = pre_stim_mat,
+                        post_stim_mats = post_stim_mats,
+                        post_stim_idx = post_stim_idx,
+                        nlambda = 10, tuning="aic", folds = 3)
+
+all_fits_ext <- all_fits %>%
+    purrr::map(.x = ., ~ ext_list_element(l = .x, elem_idx = 5))
+
+tidy_cormats <- all_fits_ext %>%
+    purrr::map(.x = , ~create_tidy_cormat(cormat = .x))
+
+all_fits_ext_plots <- tidy_cormats %>%
+    purrr::map2(.x = ., .y = base::seq.int(from = 1,
+                                           to = base::length(.),
+                                           by = 1),
+                ~ create_corr_ts(inp_cormat = .x,
+                                 cat_idx = CORE_CAT,
+                                 time_ms_idx = 500 + .y,
+                                 plot_col_range = c(-0.0009, 0.0009)))
+
+dev.off()
+all_fits_ext_plots[[170]]
+all_fits_ext_plots[[171]]
+all_fits_ext_plots[[172]]
+all_fits_ext_plots[[173]]
+all_fits_ext_plots[[174]]
+all_fits_ext_plots[[175]]
+all_fits_ext_plots[[176]]
+all_fits_ext_plots[[177]]
+all_fits_ext_plots[[178]]
+all_fits_ext_plots[[180]]
+all_fits_ext_plots[[181]]
+
+
