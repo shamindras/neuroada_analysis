@@ -2,7 +2,7 @@
 # TODO: Delete the rm line
 # rm(list = ls())
 cat("\014")
-dev.off()
+# dev.off()
 
 # Set seed for reproducibility
 set.seed(1265)
@@ -335,21 +335,153 @@ post_stim_mats <- base_dnmat_cols[2:1001]
 post_stim_idx <- base::seq.int(from = 1, to = base::length(post_stim_mats),
                                by = 1)
 
-# Let's downsample the pre-stim matrix to match
-pre_stim_mat_ds <-
-all_fits <- run_fit_dpm(pre_stim_mat = pre_stim_mat,
+# Let's downsample the pre-stim matrix. Take 10 times the number of trials
+# as the number of trials in all post stim matrices
+prestim_samp_trials <- base::nrow(post_stim_mats[[1]])*10
+samp_row_idx <- sample(nrow(pre_stim_mat),
+                       size = prestim_samp_trials, replace = FALSE)
+pre_stim_mat_samp <- pre_stim_mat[samp_row_idx, ]
+all_fits2 <- run_fit_dpm(pre_stim_mat = pre_stim_mat_samp,
                         post_stim_mats = post_stim_mats,
                         post_stim_idx = post_stim_idx,
                         nlambda = 10, tuning="aic", folds = 3)
 
-all_fits_ext <- all_fits %>%
+all_fits_ext2 <- all_fits2 %>%
     purrr::map(.x = ., ~ ext_list_element(l = .x, elem_idx = 5))
 
-tidy_cormats <- all_fits_ext %>%
+tidy_cormats2 <- all_fits_ext2 %>%
     purrr::map(.x = , ~create_tidy_cormat(cormat = .x))
 
-all_fits_ext_plots <- tidy_cormats %>%
-    purrr::map2(.x = ., .y = base::seq.int(from = 1,
+all_fits_ext_plots2 <- tidy_cormats2 %>%
+                            purrr::map2(.x = .,
+                                        .y = base::seq.int(from = 1,
+                                                           to = base::length(.),
+                                           by = 1),
+                ~ create_corr_ts(inp_cormat = .x,
+                                 cat_idx = CORE_CAT,
+                                 time_ms_idx = 500 + .y,
+                                 plot_col_range = c(-0.0009, 0.0009)))
+
+# dev.off()
+min(all_fits_ext2[[1]])
+max(all_fits_ext2[[1]])
+median(all_fits_ext2[[1]])
+
+min(all_fits_ext2[[170]])
+max(all_fits_ext2[[170]])
+median(all_fits_ext2[[170]])
+
+dev.off()
+max(all_fits_ext[[2]])
+min(all_fits_ext[[2]])
+all_fits_ext_plots2[[1]]
+all_fits_ext_plots2[[2]]
+max(all_fits_ext[[170]])
+min(all_fits_ext[[170]])
+all_fits_ext_plots2[[170]]
+all_fits_ext_plots2[[171]]
+all_fits_ext_plots2[[172]]
+all_fits_ext_plots2[[173]]
+all_fits_ext_plots2[[174]]
+all_fits_ext_plots2[[175]]
+all_fits_ext_plots2[[176]]
+all_fits_ext_plots2[[177]]
+all_fits_ext_plots2[[178]]
+all_fits_ext_plots2[[180]]
+all_fits_ext_plots2[[181]]
+
+#-------------------------------------------------------------------------------
+# Kernel Smoothing Approach
+#-------------------------------------------------------------------------------
+
+# Functions
+unif_poststim_kern_endpts <- function(idx, increment = 9, min_idx = 1,
+                                      max_idx = 1000){
+    out_vec <- c(max(min_idx, idx - 9), min(max_idx, idx + 9))
+    base::return(out_vec)
+}
+
+unif_poststim_kern_vec <- function(kern_endpts){
+    out_seq <- base::seq.int(from = kern_endpts[1],
+                             to = kern_endpts[2],
+                             by = 1)
+    base::return(out_seq)
+}
+
+ksmooth_endpts <- purrr::map(.x = 1:1000,
+                             ~ unif_poststim_kern_endpts(idx = .x,
+                                                         increment = 9,
+                                                         min_idx = 1,
+                                                         max_idx = 1000))
+
+ksmooth_vecs <- purrr::map(.x = ksmooth_endpts,
+                           ~ unif_poststim_kern_vec(kern_endpts = .x))
+
+
+# idx = 1:1000
+#
+# take matrix
+bind_new_rows <- function(idxs, df_list){
+    df_list[idxs] %>%
+        dplyr::bind_rows() %>%
+        base::return()
+}
+
+# Faces
+base_dndf3 <- erp_create_rbind(inp_erp_channel_df = erp_filt_df_cat_ms, n = 500)
+base_dndf3_post_stim <- base_dndf3[2:1001]
+base_dndf3_post_stim_smooth <- purrr::map(.x = ksmooth_vecs,
+                                          ~ bind_new_rows(idxs = .x,
+                                                          df_list = base_dndf3_post_stim))
+
+base_dndf3_smooth_comb <- list()
+base_dndf3_smooth_comb[1] <- base_dndf3[1]
+base_dndf3_smooth_comb[2:1001] <- base_dndf3_post_stim_smooth
+length(base_dndf3_smooth_comb)
+dim(base_dndf3_smooth_comb[[1]])
+dim(base_dndf3_smooth_comb[[2]])
+dim(base_dndf3_smooth_comb[[990]])
+# dim(base_dndf3_post_stim_smooth[[1]])
+# dim(base_dndf3_post_stim_smooth[[14]])
+# dim(base_dndf3_post_stim_smooth[[990]])
+base_dnmat_smooth <- base_dndf3_smooth_comb %>%
+                        purrr::map(.x = ., ~ aux_convert_df_matrix(inp_df = .x))
+# Filter out the first 25 cols for each matrix
+base_dnmat_cols_smooth <- base_dnmat_smooth %>%
+                            purrr::map(.x = .,
+                                       ~ aux_select_colnums(inp_mat = .x,
+                                                            col_idx = 1:25))
+
+pre_stim_mat_smooth <- base_dnmat_cols_smooth[[1]]
+post_stim_mats_smooth <- base_dnmat_cols_smooth[2:1001]
+post_stim_idx <- base::seq.int(from = 1,
+                               to = base::length(post_stim_mats_smooth),
+                               by = 1)
+
+# Let's downsample the pre-stim matrix. Take the 15th post stim matrix
+# which should have 9 matrices smoothed on either side of it
+prestim_samp_trials_smooth <- base::nrow(post_stim_mats_smooth[[15]])
+samp_row_idx_smooth <- sample(nrow(pre_stim_mat_smooth),
+                              size = prestim_samp_trials_smooth,
+                              replace = FALSE)
+pre_stim_mat_samp_smooth <- pre_stim_mat_smooth[samp_row_idx_smooth, ]
+
+# Keep the pre-stim matrix as the downsampled one
+all_fits_smooth <- run_fit_dpm(pre_stim_mat = pre_stim_mat_samp_smooth, # downsampled
+                               post_stim_mats = post_stim_mats_smooth,
+                               post_stim_idx = post_stim_idx,
+                               nlambda = 10, tuning="aic", folds = 3)
+
+all_fits_ext_smooth <- all_fits_smooth %>%
+                            purrr::map(.x = ., ~ ext_list_element(l = .x,
+                                                                  elem_idx = 5))
+
+tidy_cormats_smooth <- all_fits_ext_smooth %>%
+                            purrr::map(.x = ,
+                                       ~create_tidy_cormat(cormat = .x))
+
+all_fits_ext_plots_smooth <- tidy_cormats_smooth %>%
+                                purrr::map2(.x = ., .y = base::seq.int(from = 1,
                                            to = base::length(.),
                                            by = 1),
                 ~ create_corr_ts(inp_cormat = .x,
@@ -358,16 +490,18 @@ all_fits_ext_plots <- tidy_cormats %>%
                                  plot_col_range = c(-0.0009, 0.0009)))
 
 dev.off()
-all_fits_ext_plots[[170]]
-all_fits_ext_plots[[171]]
-all_fits_ext_plots[[172]]
-all_fits_ext_plots[[173]]
-all_fits_ext_plots[[174]]
-all_fits_ext_plots[[175]]
-all_fits_ext_plots[[176]]
-all_fits_ext_plots[[177]]
-all_fits_ext_plots[[178]]
-all_fits_ext_plots[[180]]
-all_fits_ext_plots[[181]]
+all_fits_ext_plots_smooth[[170]]
+all_fits_ext_plots_smooth[[171]]
+all_fits_ext_plots_smooth[[172]]
+all_fits_ext_plots_smooth[[173]]
+all_fits_ext_plots_smooth[[174]]
+all_fits_ext_plots_smooth[[175]]
+all_fits_ext_plots_smooth[[176]]
+all_fits_ext_plots_smooth[[177]]
+all_fits_ext_plots_smooth[[178]]
+all_fits_ext_plots_smooth[[179]]
+all_fits_ext_plots_smooth[[180]]
 
-
+# Video of empirical fits solve for poststim inverse - prestim
+# Look at the lambda values for each fit and how they changed
+# nmf penalty on the W basis - log-concave penalty
