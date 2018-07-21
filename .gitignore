@@ -317,6 +317,7 @@ data/**/*.dat
 data/localizer_erp/P*_fullset/
 data/localizer_erp/P35_specgram/*.csv
 data/localizer_erp/P35_specgram/old_backup
+data/localizer_erp/P35_specgram/category/*
 
 .DS_Store
 .Rproj.user
