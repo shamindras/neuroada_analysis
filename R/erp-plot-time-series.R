@@ -50,7 +50,8 @@ erp_cat_session1 <-
                                     session_index = 1,
                                     task = TASK,
                                     filter = FILTER,
-                                    channel_index = CHANNEL_INDEX)
+                                    channel_index = CHANNEL_INDEX) %>%
+    purrr::map(.x = ., ~add_trial_idx(df = .x)) # Append the trial_idx
 
 dim(erp_cat_session1[[1]])
 dplyr::glimpse(erp_cat_session1[[1]][, 1:10])
@@ -66,7 +67,6 @@ colnames(erp_cat_session1[[1]]) %>% head() %>% cat()
 
 # Create a tidy version of the dataset
 erp_labeled_comb <- erp_cat_session1 %>%
-    purrr::map(.x = ., ~add_trial_idx(df = .x)) %>% # Append the trial_idx
     purrr::map_df(rbind) %>% # row bind the channel dataframes together
     dplyr::mutate(channel_idx = as.factor(channel_idx),
                   session_idx = as.factor(session_idx),
@@ -99,19 +99,31 @@ p2 <- p1 + ggplot2::geom_line() +
 p2
 plotly::ggplotly(p2)
 
+head(erp_labeled_comb_exp$trial_idx)
+
+test3 <- erp_labeled_comb_exp %>%
+    dplyr::filter(lab_category == CORE_CAT,
+                  channel_idx == 25,
+                  as.integer(trial_idx) <= 40)
+dim(test3)
+View(test3)
+
+CHANNEL <- 26
 p3 <- erp_labeled_comb_exp %>%
-    dplyr::filter(lab_category == CORE_CAT) %>%
+    dplyr::filter(lab_category == CORE_CAT, channel_idx == CHANNEL, as.integer(trial_idx) <= 100) %>%
     dplyr::group_by(trial_idx, ms) %>%
     dplyr::summarise(erp_volt = mean(erp_voltage)) %>%
     dplyr::ungroup() %>%
     ggplot2::ggplot(data = ., mapping = aes(x = ms, y = erp_volt
                                             , color = trial_idx))
+
+p3
 p4 <- p3 + ggplot2::geom_line() +
     ggplot2::theme(legend.position="none") +
-    ggplot2::labs(title = glue::glue("{CORE_CAT} - Patient {N_PATIENT_NUM}, Session {SESSION_INDEX}"))
+    ggplot2::labs(title = glue::glue("{CORE_CAT} - Patient {N_PATIENT_NUM}, Session {SESSION_INDEX}, Channel {CHANNEL}"))
 plotly::ggplotly(p4)
 
-
+typeof(erp_labeled_comb_exp$trial_idx)
 #-------------------------------------------------------------------------------
 # Compare to CSV readin
 #-------------------------------------------------------------------------------
@@ -123,3 +135,29 @@ colnames(erp_cat_session1[[1]]) %>% head() %>% cat()
 
 test_faces <- erp_labeled_comb_exp %>%
     dplyr::filter(lab_category == CORE_CAT)
+
+dim(test_faces)
+    head(test_faces, 1000) %>% View()
+
+# test_faces %>%
+#     dplyr::group_by(trial_idx) %>%
+#     dplyr::summarize(n = n()) %>%
+#     dplyr::ungroup()
+
+# Read in the first channel from the
+test_faces2 <- erp_cat_session1[[1]] %>%
+                   dplyr::filter(lab_category == CORE_CAT)
+head(test_faces2) %>% View()
+
+test_exp_csv_nm <- "P35-ses-01-chn-01-Faces.csv"
+test_exp_csv_pth <- here::here("data", "localizer_erp", "P35_specgram", "category",
+                           "session_01", "faces", test_exp_csv_nm)
+test_exp_csv <- readr::read_csv(test_exp_csv_pth)
+head(test_exp_csv) %>% View()
+
+test_faces2_subset <- test_faces2 %>%
+                        select(X1:X1500)
+View(test_faces2_subset %>% head() %>% dplyr::select(1:20))
+View(test_exp_csv %>% head() %>% dplyr::select(1:20))
+
+base::identical(test_exp_csv, test_faces2_subset)
