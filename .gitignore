@@ -316,9 +316,14 @@ data/**/*.tar.gz
 data/**/*.dat
 data/localizer_erp/P*_fullset/
 data/localizer_erp/P35_specgram/*.csv
+data/localizer_erp/P35_specgram/old_backup
+data/localizer_erp/P35_specgram/category/*
+data/localizer_erp/P36_specgram/category/*
+data/localizer_erp/P41_specgram/category/*
 
 .DS_Store
 .Rproj.user
 
 # Python
 Python/.ipynb_checkpoints/
+Python/old_backup/.ipynb_checkpoints/
