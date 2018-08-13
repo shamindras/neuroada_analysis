@@ -321,6 +321,12 @@ data/localizer_erp/P35_specgram/category/*
 data/localizer_erp/P36_specgram/category/*
 data/localizer_erp/P41_specgram/category/*
 
+# Data - experiments
+R/pisces/data/*.mat
+R/pisces/data/erp_cormats_sm_cat/*.mat
+R/pisces/data/erp_cormats_us_cat_nonaft/*.mat
+R/pisces/data/erp_cormats_us_cat_nonaft/post_stim_200/*.mat
+
 .DS_Store
 .Rproj.user
 
