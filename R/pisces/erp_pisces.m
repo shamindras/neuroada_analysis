@@ -22,5 +22,5 @@ disp(dat);
 disp(size(dat));
 
 %run PisCES_cv
-%alphalist = [0.001 0.005 0.01 0.05 0.1 0.15];
+alphalist = [0.001 0.005 0.01 0.05 0.1 0.15];
 %[modu like] = pisces_cv(A, alphalist);
