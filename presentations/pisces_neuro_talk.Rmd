@@ -1,8 +1,8 @@
 ---
-title: "Presentation Ninja"
-subtitle: "⚔<br/>with xaringan"
-author: "Yihui Xie"
-date: "2016/12/12 (updated: `r Sys.Date()`)"
+title: "Global spectral clustering in dynamic networks"
+subtitle: "Fuchen Liu, David Choi, Lu Xie, Kathryn Roedera"
+author: "presenter: Shamindra Shrotriya"
+date: "`r Sys.Date()`"
 output:
   xaringan::moon_reader:
     lib_dir: libs
@@ -36,13 +36,8 @@ class: inverse, center, middle
 
 ---
 
-# Hello World
+# Motivation
 
-Install the **xaringan** package from [Github](https://github.com/yihui/xaringan):
-
-```{r eval=FALSE, tidy=FALSE}
-devtools::install_github("yihui/xaringan")
-```
 
 --
 

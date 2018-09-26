@@ -7,4 +7,47 @@
 #+COLUMNS: %25ITEM %TODO %3PRIORITY %TAGS
 #+SEQ_TODO: TODO(t!) STARTED(s!) WAITING(w!) APPT(a!) | DONE(d!) CANCELLED(c!) DEFERRED(f!)
 
-* 
+* Motivation and Significance
+
+* Application Focus of the paper
+
+* Spectral Methods in Network Analysis
+
+** Broad Background
+
+** Static Networks
+
+** Dynamic Networks
+
+*** Why difficult - Non-convex
+
+*** Why does the iteration work? Convergence result
+
+*** Laplacian Smoothing
+
+* How to Choose $\alpha$? Cross Validation
+
+* PisCES? Extends the Laplacian Framework
+
+** How? K unknown
+
+* Results
+
+** Describe the study
+
+** PiSCES Results summary
+
+** Sankey plots description
+
+* Simulations
+
+** Key setups - take one, why do this particularly?
+
+** What comparison models are used?
+
+* Run Sims
+
+** Matlab - code and sims side by side
+
+** 
+* Conclusions
