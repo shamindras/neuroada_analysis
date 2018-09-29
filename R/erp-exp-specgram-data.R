@@ -19,14 +19,14 @@ devtools::install_github("shamindras/neuroada")
 
 # User variables
 N_DATA_TYPE <- "localizer_erp"
-N_PATIENT_NUM <- 36
-SESSION_INDEX <- 2
+N_PATIENT_NUM <- 35
+SESSION_INDEX <- 1
 TASK <- "category"
 FILTER <- "raw"
 # TODO: This should be the max channel index
 #       We want all channels less than or equal to this amount
 CHANNEL_INDEX <- 115
-CORE_CAT <- "Faces"
+CORE_CAT <- "Words"
 ALL_ERP_TIME_INT <- 1:1500
 BIN_WIDTH <- 15
 BATCH_IDX <- 6
