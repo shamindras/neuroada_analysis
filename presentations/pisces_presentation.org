@@ -1,0 +1,53 @@
+#+STARTUP: overview indent inlineimages logdrawer
+#+TITLE:       PisCes Presentation Notes
+#+AUTHOR:      Shamindra Shrotriya
+#+LANGUAGE:    en
+#+OPTIONS:   H:3 num:t toc:t \n:nil @:t ::t |:t ^:t -:t f:t *:t <:t
+#+OPTIONS:   TeX:t LaTeX:nil skip:nil d:nil todo:t pri:nil tags:not-in-toc
+#+COLUMNS: %25ITEM %TODO %3PRIORITY %TAGS
+#+SEQ_TODO: TODO(t!) STARTED(s!) WAITING(w!) APPT(a!) | DONE(d!) CANCELLED(c!) DEFERRED(f!)
+
+* Motivation and Significance
+
+* Application Focus of the paper
+
+* Spectral Methods in Network Analysis
+
+** Broad Background
+
+** Static Networks
+
+** Dynamic Networks
+
+*** Why difficult - Non-convex
+
+*** Why does the iteration work? Convergence result
+
+*** Laplacian Smoothing
+
+* How to Choose $\alpha$? Cross Validation
+
+* PisCES? Extends the Laplacian Framework
+
+** How? K unknown
+
+* Results
+
+** Describe the study
+
+** PiSCES Results summary
+
+** Sankey plots description
+
+* Simulations
+
+** Key setups - take one, why do this particularly?
+
+** What comparison models are used?
+
+* Run Sims
+
+** Matlab - code and sims side by side
+
+** 
+* Conclusions

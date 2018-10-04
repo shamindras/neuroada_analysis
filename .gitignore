@@ -338,3 +338,7 @@ R/pisces/data/erp_cormats_us_cat_nonaft/pre_stim/*.mat
 # Python
 Python/.ipynb_checkpoints/
 Python/old_backup/.ipynb_checkpoints/
+
+# presentations
+presentations/libs/
+presentations/pisces_neuro_talk_files/
