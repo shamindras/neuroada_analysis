@@ -19,14 +19,14 @@ devtools::install_github("shamindras/neuroada")
 
 # User variables
 N_DATA_TYPE <- "localizer_erp"
-N_PATIENT_NUM <- 35
+N_PATIENT_NUM <- 41
 SESSION_INDEX <- 1
 TASK <- "category"
 FILTER <- "raw"
 # TODO: This should be the max channel index
 #       We want all channels less than or equal to this amount
 CHANNEL_INDEX <- 115
-CORE_CAT <- "Words"
+CORE_CAT <- "Allcats"
 ALL_ERP_TIME_INT <- 1:1500
 BIN_WIDTH <- 15
 BATCH_IDX <- 6
@@ -103,9 +103,17 @@ create_csv_path <- function(out_dir_path, patient_num, session_idx, channel_idx,
 #' @export
 erp_specgram_filter_cat <- function(erp_cat_session_channel,
                                     channel_idx, cat_idx){
-    get_erp_trials_cat <- erp_cat_session_channel %>%
-                            neuroada::filter_rows(df = ., cat_idx = cat_idx) %>%
-                            dplyr::select(-(lab_category:task_type))
+    if(cat_idx == "Allcats"){
+        # Do not filter the trials for a channel by any
+        # specific category if we want all categories
+        get_erp_trials_cat <- erp_cat_session_channel %>%
+            dplyr::select(-(lab_category:task_type))
+    }else{
+        # Filter the channel trials to the specified category
+        get_erp_trials_cat <- erp_cat_session_channel %>%
+            neuroada::filter_rows(df = ., cat_idx = cat_idx) %>%
+            dplyr::select(-(lab_category:task_type))
+    }
     base::return(get_erp_trials_cat)
 }
 
