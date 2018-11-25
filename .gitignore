@@ -324,6 +324,11 @@ data/localizer_erp/P32_specgram/category/*
 data/localizer_erp/P34_specgram/category/*
 data/localizer_erp/P37_specgram/category/*
 
+data/electrode_locs/*.mat
+data/electrode_keys/*.xlsx
+data/electrode_keys/*.csv
+data/electrode_locs/extract_eltimes_I1_all_cats_new_recons.m
+
 
 # Data - experiments
 R/pisces/data/*.mat
