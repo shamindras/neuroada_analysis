@@ -7,6 +7,7 @@ dev.off()
 library(here)
 library(tidyverse)
 library(magrittr)
+library(devtools)
 devtools::install_github("shamindras/neuroada")
 
 #*******************************************************************************
@@ -19,14 +20,14 @@ devtools::install_github("shamindras/neuroada")
 
 # User variables
 N_DATA_TYPE <- "localizer_erp"
-N_PATIENT_NUM <- 37
+N_PATIENT_NUM <- 41
 SESSION_INDEX <- 1
 TASK <- "category"
 FILTER <- "raw"
 # TODO: This should be the max channel index
 #       We want all channels less than or equal to this amount
 CHANNEL_INDEX <- 130
-CORE_CAT <- "Allcats"
+CORE_CAT <- "Nonobjects"
 ALL_ERP_TIME_INT <- 1:1500
 BIN_WIDTH <- 15
 BATCH_IDX <- 6
